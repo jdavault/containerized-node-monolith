@@ -16,17 +16,17 @@ const router = express.Router();
  *       type: object
  *       required:
  *         - title
- *         - author
+ *         - body
  *       properties:
  *         title:
  *           type: string
  *           description: The note text
- *         author:
+ *         body:
  *           type: string
  *           description: Author of note
  *       example:
  *         title: Harry Potter
- *         author: "J. K. Rowling"
+ *         body: "J. K. Rowling"
  */
 
 /**
@@ -35,22 +35,6 @@ const router = express.Router();
  *   name: Notes
  *   description: Notes API (from MongoDB)
  */
-
-// /**
-//  * @swagger
-//  * /:
-//  *   get:
-//  *     tags: [General]
-//  *     summary: This api is used to check if get method is working
-//  *     description: This api is used to check if get method is working
-//  *     responses:
-//  *       200:
-//  *         description: Success
-//  */
-
-// router.get("/", (req, res) => {
-//   res.send("Welcome to booksDb -- <a href='http://localhost:3003/swagger'>http://localhost:3003/swagger<a>")
-// })
 
 /**
  * @swagger
@@ -69,7 +53,7 @@ const router = express.Router();
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Notes (MongoDB'
+ *                 $ref: '#/components/schemas/Notes'
  *       500:
  *         description: Server Error
  */
@@ -80,9 +64,6 @@ router.get("/api/notes", async (req, res) => {
     res.status(200).json({
       notes,
     });
-    // res.status(200).json({
-    //   message: ["Hello from notes", "Hello Again, from notes", "Once More"],
-    // });
   } catch (e) {
     console.log(e);
 
@@ -113,9 +94,9 @@ router.get("/api/notes", async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Book'
+ *                $ref: '#/components/schemas/Notes'
  *       404:
- *         description: The book was not found
+ *         description: The notes was not found
  *       500:
  *         description: Server Error
  */
@@ -139,6 +120,32 @@ router.get("/api/notes/:id", async (req, res) => {
     });
   }
 });
+
+/**
+ * @swagger
+ * /api/notes:
+ *   post:
+ *     tags: [Notes]
+ *     summary: Create a new notes
+ *     description: Create a new notes
+ *     security:
+ *       - ApiKeyAuth: [read,write]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Notes'
+ *     responses:
+ *       201:
+ *         description: The Notes was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Notes'
+ *       500:
+ *         description: Server Error
+ */
 
 router.post("/api/notes", async (req, res) => {
   console.log(req.body);
@@ -179,6 +186,32 @@ router.patch("/api/notes/:id", async (req, res) => {
     });
   }
 });
+
+/**
+ * @swagger
+ * /api/notes/{id}:
+ *   delete:
+ *     summary: Delete book
+ *     tags: [Notes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         description:
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Notes'
+ *       404:
+ *         description: Book Not Found
+ *       500:
+ *         description: Server Error
+ */
 
 router.delete("/api/notes/:id", async (req, res) => {
   try {
